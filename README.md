@@ -1,5 +1,7 @@
 # SVG Motion Studio
 
+[Open the live editor](https://gxella.github.io/svg-motion-studio/) · [GitHub repository](https://github.com/GXeLla/svg-motion-studio)
+
 A local-first SVG animation editor built with HTML, CSS and vanilla JavaScript. Animate editable vector layers with a visual timeline, custom reveals and portable SVG exports. No build step, framework, account, API key or backend.
 
 The interface uses layered slate/navy surfaces, cool white text, blue editing controls and distinct periwinkle Layers/Library highlights. Project artwork, branding and loading illustrations retain their own palettes. Existing saved canvas backgrounds are preserved.
@@ -30,7 +32,7 @@ Enjoying SVG Motion Studio? You can support its continued development on [Ko-fi]
 
 ## Publishing on GitHub
 
-Use `svg-motion-studio` as the repository name. Put this project's contents at the repository root—not the parent directory or its other projects. Keep the relative folder structure intact. The editor can be served by a static host without compilation; online icons still require internet access. Before making the repository public, review the asset licensing notes below.
+This repository is published with GitHub Pages from the root of `main`: [open SVG Motion Studio](https://gxella.github.io/svg-motion-studio/). Pushing updates to `main` triggers deployment. The `.nojekyll` marker serves the static application without Jekyll processing. Keep the relative folder structure intact; no compilation is required. Online icons still require internet access. For forks or redistribution, review the asset licensing notes below.
 
 ## Start
 
