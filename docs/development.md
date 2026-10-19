@@ -46,3 +46,9 @@ Do not delete `assets/library/offline/` as duplicate data: it supports offline d
 - [Historical task-pack implementation and measurements](task-pack-report.md)
 
 Before release, run the applicable checks, verify documentation links and the README preview, and review redistribution permissions for supplied assets. Do not commit credentials, local dependency folders or test output.
+
+## Deployment and import boundaries
+
+The live editor is published from the root of `main` using GitHub Pages. Pushing to `main` triggers deployment; `.nojekyll` disables Jekyll processing. No build step is required. The runtime needs `index.html`, `scripts/`, `styles/` and `assets/` with their relative paths intact.
+
+SVG import removes scripts, event handlers, foreignObject and external image/font references while retaining supported native SVG/CSS animations and local gradient/mask references. Complex filters, nested viewports and externally driven artwork may require simplification. This importer is not an audited production security boundary. Online search depends on third-party availability; automated browser verification currently uses Chrome, not Firefox or Safari/WebKit.

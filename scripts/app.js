@@ -38,7 +38,7 @@ function restore(raw) {
 function safeCSS(css){return css.replace(/@import[^;]*;?/gi,'').replace(/url\(\s*(['"]?)(.*?)\1\s*\)/gi,(match,quote,value)=>/^#[\w:.-]+$/.test(value.trim())?`url(${value.trim()})`:'none').replace(/expression\([^)]*\)/gi,'').replace(/javascript:/gi,'');}
 function scopeCSS(css){try{let sheet=new CSSStyleSheet();sheet.replaceSync(css);function rules(list){return Array.from(list).map(rule=>{if(rule.type===CSSRule.STYLE_RULE){let selector=rule.selectorText;return `.ms-root :is(${selector}),.ms-root:is(${selector}){${rule.style.cssText}}`;}if(rule.type===CSSRule.KEYFRAMES_RULE)return rule.cssText;if(rule.cssRules){let header=rule.cssText.slice(0,rule.cssText.indexOf('{'));return header+'{'+rules(rule.cssRules)+'}';}return '';}).join('\n');}return rules(sheet.cssRules);}catch{return '';}}
 function validColor(v){return /^#[0-9a-f]{6}$/i.test(String(v));}
-function importSVGBase(text,name='Untitled',source=null){cancelCurveDrawing();const s=sanitize(text);pause();state={...state,counter:0,objects:{},selected:[],activeClip:null,name:name.replace(/\.svg$/i,''),artScale:100,customAspectRatio:null,source};let vb=(s.getAttribute('viewBox')||'').trim().split(/[ ,]+/).map(Number);if(vb.length!==4||vb.some(v=>!Number.isFinite(v))||vb[2]<=0||vb[3]<=0)vb=[0,0,parseFloat(s.getAttribute('width'))||200,parseFloat(s.getAttribute('height'))||200];state.view=vb;state.originalView=[...vb];state.width=clamp(parseFloat(s.getAttribute('width'))||vb[2],1,16000);state.height=clamp(parseFloat(s.getAttribute('height'))||vb[3],1,16000);root=document.importNode(s,true);root.setAttribute('width',state.width);root.setAttribute('height',state.height);root.setAttribute('viewBox',vb.join(' '));root.setAttribute('preserveAspectRatio','xMidYMid meet');root.style.removeProperty('width');root.style.removeProperty('height');bindImportedStyles(root);art=svgel('g',{'data-artwork':'true'});let children=Array.from(root.children);children.filter(e=>!['defs','style','title','desc','animate','animateTransform','animateMotion','set'].includes(e.localName)).forEach(e=>art.append(e));root.append(art);style=svgel('style',{id:'ms-motion-style'});root.prepend(style);nodes=new Map();wrapTree(art);$('svgHost').replaceChildren(root);let top=Object.values(state.objects).filter(o=>!o.parent);state.selected=top.length?[top[0].id]:[];state.activeClip=null;time=0;zoom=1;applyAll();renderAll();autosave();}
+function importSVGBase(text,name='Untitled',source=null){cancelCurveDrawing();const s=sanitize(text);pause();state={...state,counter:0,objects:{},selected:[],activeClip:null,name:name.replace(/\.svg$/i,''),artScale:100,customAspectRatio:null,source};let vb=(s.getAttribute('viewBox')||'').trim().split(/[ ,]+/).map(Number);if(vb.length!==4||vb.some(v=>!Number.isFinite(v))||vb[2]<=0||vb[3]<=0)vb=[0,0,parseFloat(s.getAttribute('width'))||200,parseFloat(s.getAttribute('height'))||200];state.view=vb;state.originalView=[...vb];state.width=clamp(parseFloat(s.getAttribute('width'))||vb[2],1,16000);state.height=clamp(parseFloat(s.getAttribute('height'))||vb[3],1,16000);state.originalSize=[state.width,state.height];root=document.importNode(s,true);root.setAttribute('width',state.width);root.setAttribute('height',state.height);root.setAttribute('viewBox',vb.join(' '));root.setAttribute('preserveAspectRatio','xMidYMid meet');root.style.removeProperty('width');root.style.removeProperty('height');bindImportedStyles(root);art=svgel('g',{'data-artwork':'true'});let children=Array.from(root.children);children.filter(e=>!['defs','style','title','desc','animate','animateTransform','animateMotion','set'].includes(e.localName)).forEach(e=>art.append(e));root.append(art);style=svgel('style',{id:'ms-motion-style'});root.prepend(style);nodes=new Map();wrapTree(art);$('svgHost').replaceChildren(root);let top=Object.values(state.objects).filter(o=>!o.parent);state.selected=top.length?[top[0].id]:[];state.activeClip=null;time=0;zoom=1;applyAll();renderAll();autosave();}
 function object(id=state.selected[0]){return state.objects[id];}
 function visual(id=state.selected[0]){return qs(`[data-visual="${id}"]`,nodes.get(id));}
 function activeClip(){let o=object();if(!o)return null;return o.clips.find(c=>c.id===state.activeClip)||o.clips[0]||null;}
@@ -136,18 +136,22 @@ function resizeCanvasDimensions(axis,value,locked){
 }
 function syncAspectRatio(){
  const ratio=state.customAspectRatio;
- $('clearAspectRatio').disabled=!ratio;
- $('aspectRatioStatus').textContent=ratio?`Custom ${ratio[0]}:${ratio[1]} · ${$('aspectLock').checked?'locked':'lock off'}`:'Lock uses the current canvas proportions.';
+ const original=originalCanvasSize();
+ $('clearAspectRatio').disabled=!ratio&&state.width===original[0]&&state.height===original[1];
+ $('aspectRatioStatus').textContent=ratio?`${ratio[0]}:${ratio[1]} · ${$('aspectLock').checked?'locked':'lock off'}`:`Original: ${original[0]} × ${original[1]} px`;
  if(ratio){$('aspectRatioWidth').value=ratio[0];$('aspectRatioHeight').value=ratio[1];}
 }
 $('applyAspectRatio').onclick=applyCustomAspectRatio;
-$('clearAspectRatio').onclick=()=>{checkpoint();state.customAspectRatio=null;syncCanvas();autosave();updateUndo();};
+$('clearAspectRatio').onclick=()=>{checkpoint();state.customAspectRatio=null;[state.width,state.height]=originalCanvasSize();$('aspectRatioWidth').value=state.width;$('aspectRatioHeight').value=state.height;syncCanvas();autosave();updateUndo();};
 $('aspectLock').onchange=syncAspectRatio;
 function applyCustomAspectRatio(){
  const ratio=[Number($('aspectRatioWidth').value),Number($('aspectRatioHeight').value)];
  if(!ratio.every(v=>Number.isFinite(v)&&v>=.001&&v<=16000)||ratio[0]/ratio[1]<1/16000||ratio[0]/ratio[1]>16000)return notifyError('Use positive ratio values from 0.001 to 16000, with proportions no wider or taller than 16000:1.');
  checkpoint();state.customAspectRatio=ratio;$('aspectLock').checked=true;
  resizeCanvasDimensions(0,state.width,true);syncCanvas();autosave();updateUndo();
+}
+function originalCanvasSize(){
+ return state.originalSize||[clamp(state.originalView[2],1,16000),clamp(state.originalView[3],1,16000)];
 }
 function cssHex(color){if(validColor(color))return color;let m=String(color).match(/^rgb\(\s*(\d+)[, ]+\s*(\d+)[, ]+\s*(\d+)/);return m?'#'+m.slice(1).map(n=>(+n).toString(16).padStart(2,'0')).join(''):null;}
 function paint(attr,value){if(!state.selected.length)return notifyError('Select an object first.');checkpoint();topSelection().forEach(id=>{let el=visual(id),targets=el.matches('g,svg')?qsa('path,rect,circle,ellipse,polygon,polyline,line,text',el):[el];targets.forEach(e=>{e.setAttribute(attr,value);e.style.setProperty(attr,value,'important');});});applyAll();renderColors();commit();}

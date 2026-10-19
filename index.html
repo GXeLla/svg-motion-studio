@@ -536,16 +536,16 @@
             >
             <details class="custom-aspect">
               <summary>Custom aspect ratio</summary>
-              <div class="two-col">
-                <label class="field">Ratio width<input id="aspectRatioWidth" type="number" min="0.001" max="16000" step="any" value="16" /></label>
-                <label class="field">Ratio height<input id="aspectRatioHeight" type="number" min="0.001" max="16000" step="any" value="9" /></label>
+              <div class="aspect-inputs">
+                <label>Width<input id="aspectRatioWidth" type="number" min="0.001" max="16000" step="any" value="16" /></label>
+                <span class="aspect-colon" aria-hidden="true">:</span>
+                <label>Height<input id="aspectRatioHeight" type="number" min="0.001" max="16000" step="any" value="9" /></label>
               </div>
-              <div class="two-col">
+              <div class="aspect-actions">
                 <button id="applyAspectRatio" type="button">Apply ratio</button>
-                <button id="clearAspectRatio" type="button" disabled>Use current size</button>
+                <button id="clearAspectRatio" type="button" title="Restore original imported width and height" disabled>Reset</button>
               </div>
               <p id="aspectRatioStatus" class="muted small" aria-live="polite">Lock uses the current canvas proportions.</p>
-              <p class="muted small">Apply keeps the width where possible and enables the lock. This changes export size, not artwork or crop.</p>
             </details>
             <label class="field"
               >Preview background

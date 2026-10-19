@@ -28,7 +28,7 @@ https://creativecommons.org/publicdomain/zero/1.0/
 Online SVGs are not relicensed by this project. Their original collection
 licenses apply. Collection and license information is retained on import.
 
-The supplied Studio Artwork artwork, Brush frame, branding, loading-screen
+The supplied Studio Artwork collection, Brush frame, branding, loading-screen
 artwork, PNG references, approved recordings, and coffee-cup illustration
 are supplied assets. No additional license
 for these assets is implied by the code's MIT license or the original

@@ -24,6 +24,8 @@ function validateProject(data, svg) {
   candidate.originalView = bounds(candidate.originalView ?? [...candidate.view]);
   candidate.width = number(candidate.width, 600, 1, 16000);
   candidate.height = number(candidate.height, 600, 1, 16000);
+  if(candidate.originalSize!==undefined&&(!Array.isArray(candidate.originalSize)||candidate.originalSize.length!==2||!candidate.originalSize.every(v=>typeof v==='number'&&Number.isFinite(v)&&v>=1&&v<=16000)))fail('invalid original canvas size.');
+  candidate.originalSize=candidate.originalSize||candidate.originalView.slice(2).map(v=>Math.min(16000,Math.max(1,v)));
   if(candidate.customAspectRatio!=null){
     const ratio=candidate.customAspectRatio;
     if(!Array.isArray(ratio)||ratio.length!==2||!ratio.every(v=>typeof v==='number'&&Number.isFinite(v)&&v>=.001&&v<=16000)||ratio[0]/ratio[1]<1/16000||ratio[0]/ratio[1]>16000)fail('invalid custom aspect ratio.');

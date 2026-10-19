@@ -21,9 +21,15 @@
 #layersSection .section-title .icon{display:grid;place-items:center;width:30px;height:30px;padding:5px;line-height:1}
 #layersSection .section-title .icon svg{display:block;width:18px;height:18px;overflow:visible}
 .header-tools .icon{display:grid;place-items:center;line-height:1}
-.custom-aspect{margin:12px 0 16px;padding:10px;border:1px solid var(--line);border-radius:7px;background:#ffffff03}
-.custom-aspect summary{cursor:pointer;color:var(--text);font-size:12px}
+.custom-aspect{margin:10px 0 14px;padding:10px 12px 1px;border:1px solid var(--line);border-radius:8px;background:#ffffff03}
+.custom-aspect summary{cursor:pointer;color:var(--text);font-size:13px;font-weight:550;line-height:20px}
 .custom-aspect summary:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:3px}
-.custom-aspect .field{min-width:0}
-.custom-aspect button{font-size:11px;padding:7px 5px}
-.custom-aspect p{margin:10px 0 0}
+.aspect-inputs{display:grid;grid-template-columns:minmax(0,1fr) 14px minmax(0,1fr);gap:6px;align-items:end;margin-top:12px}
+.aspect-inputs label{display:grid;gap:5px;min-width:0;color:var(--muted);font-size:12px;line-height:16px}
+.aspect-inputs input{height:34px;padding:5px 8px;text-align:center;font-size:14px;font-variant-numeric:tabular-nums}
+.aspect-colon{height:34px;display:grid;place-items:center;color:var(--muted);font-size:16px}
+.aspect-actions{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:10px}
+.custom-aspect button{height:32px;padding:5px 10px;font-size:12px;line-height:20px}
+#applyAspectRatio{background:#81baff16;border-color:#81baff66;color:var(--cyan)}
+#applyAspectRatio:hover{background:#81baff26}
+.custom-aspect p{margin:8px 0 0;font-size:11px;line-height:16px}

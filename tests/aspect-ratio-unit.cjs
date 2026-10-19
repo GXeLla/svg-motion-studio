@@ -3,7 +3,7 @@ const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/st
 const app=fs.readFileSync(path.join(__dirname,'../scripts/app.js'),'utf8');
 const controls=new Map(),errors=[];
 const context=vm.createContext({
- state:{width:1600,height:900},
+ state:{width:1600,height:900,originalSize:[1600,900]},
  num:(v,f=0)=>Number.isFinite(+v)?+v:f,
  clamp:(v,min,max)=>Math.min(max,Math.max(min,v)),
  $:id=>{if(!controls.has(id))controls.set(id,{});return controls.get(id);},
@@ -21,8 +21,8 @@ const before=JSON.stringify(context.state);
 for(const invalid of [[0,1],[-1,1],[1,0],['',1],['bad',1],[Infinity,1],[16000,.001]]){
  const count=errors.length;ratio(...invalid);assert.equal(errors.length,count+1);assert.equal(JSON.stringify(context.state),before);
 }
-context.$('clearAspectRatio').onclick();assert.equal(context.state.customAspectRatio,null);dimensions(600,750);
-context.resizeCanvasDimensions(0,800,true);dimensions(800,1000);
+context.$('clearAspectRatio').onclick();assert.equal(context.state.customAspectRatio,null);dimensions(1600,900);
+context.resizeCanvasDimensions(0,800,true);dimensions(800,450);
 ratio(16,9);context.resizeCanvasDimensions(0,1600,true);dimensions(1600,900);
 for(const proportions of [[16,9],[4,5],[1,1],[16000,1],[1,16000],[2.39,1]]){
  ratio(...proportions);
