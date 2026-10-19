@@ -1,0 +1,10 @@
+{
+  "id": "20-watercolor-koi",
+  "selection": "20",
+  "name": "Watercolor Koi",
+  "background": "#1c1126",
+  "cycleMs": 4000,
+  "minimumDisplayMs": 1500,
+  "svg": "loader.svg",
+  "description": "Selected XeLa startup artwork: 20. Four-second native SVG loop; a stationary illustration is used for reduced motion."
+}

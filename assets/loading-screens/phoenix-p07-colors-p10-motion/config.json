@@ -1,0 +1,10 @@
+{
+  "id": "phoenix-p07-colors-p10-motion",
+  "selection": "P07 colors + P10 motion",
+  "name": "Phoenix / Twin Flame Timefold",
+  "background": "#071b25",
+  "cycleMs": 4000,
+  "minimumDisplayMs": 1500,
+  "svg": "loader.svg",
+  "description": "Selected XeLa startup artwork: P07 colors + P10 motion. Four-second native SVG loop; a stationary illustration is used for reduced motion. The Phoenix combines P07 warm/cool coloring with P10 timefold motion."
+}

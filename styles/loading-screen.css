@@ -1,0 +1,9 @@
+/* The artwork is square; the surrounding surface, not the art, fills the screen. */
+#bootScreen{box-sizing:border-box;padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));gap:12px;overflow:hidden;opacity:1;transition:opacity 300ms ease}
+#bootArtwork{width:min(76vw,calc(100vh - 100px),640px);width:min(76vw,calc(100dvh - 100px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px)),640px);aspect-ratio:1;min-height:0;min-width:0;display:grid;place-items:center}
+.xela-loader-artwork{display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;user-select:none}
+#bootArtwork[hidden]{display:none}
+#bootMessage{max-width:min(90vw,440px);text-align:center;font-size:12px;line-height:1.5;letter-spacing:.02em;color:#ede4f3}
+#bootScreen.loader-exiting{opacity:0}
+#bootScreen button{margin:4px auto 0}
+@media(prefers-reduced-motion:reduce){#bootScreen{transition:none}}

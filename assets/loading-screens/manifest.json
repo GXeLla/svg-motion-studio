@@ -1,0 +1,96 @@
+{
+  "packageId": "xela-selected-svg-loaders-v1",
+  "loaders": [
+    {
+      "id": "44-eye-liquid-gold",
+      "selection": "44",
+      "name": "Eye in Liquid Gold",
+      "background": "#10282b",
+      "cycleMs": 4000,
+      "minimumDisplayMs": 1500,
+      "svg": "loader.svg",
+      "description": "Selected XeLa startup artwork: 44. Four-second native SVG loop; a stationary illustration is used for reduced motion.",
+      "folder": "44-eye-liquid-gold",
+      "svgBytes": 13572,
+      "svgSha256": "04b64576c6f41cbcf41922baa19cf1a394cb835f5eb498f2ea4d5f309d446906"
+    },
+    {
+      "id": "42-celestial-origami",
+      "selection": "42",
+      "name": "Celestial Origami",
+      "background": "#290f1b",
+      "cycleMs": 4000,
+      "minimumDisplayMs": 1500,
+      "svg": "loader.svg",
+      "description": "Selected XeLa startup artwork: 42. Four-second native SVG loop; a stationary illustration is used for reduced motion.",
+      "folder": "42-celestial-origami",
+      "svgBytes": 35464,
+      "svgSha256": "bb5f65f6baf89b327c7bc023474f3026607b2f8a87a4117d768137172cafa853"
+    },
+    {
+      "id": "33-cabin-snowglobe",
+      "selection": "33",
+      "name": "Cabin Snowglobe",
+      "background": "#290f1b",
+      "cycleMs": 4000,
+      "minimumDisplayMs": 1500,
+      "svg": "loader.svg",
+      "description": "Selected XeLa startup artwork: 33. Four-second native SVG loop; a stationary illustration is used for reduced motion.",
+      "folder": "33-cabin-snowglobe",
+      "svgBytes": 56444,
+      "svgSha256": "b6b5a014316fb2ef0d97495af1e1ebfefe26bdfa97c8d3cf5f78ddcdf9fc2960"
+    },
+    {
+      "id": "20-watercolor-koi",
+      "selection": "20",
+      "name": "Watercolor Koi",
+      "background": "#1c1126",
+      "cycleMs": 4000,
+      "minimumDisplayMs": 1500,
+      "svg": "loader.svg",
+      "description": "Selected XeLa startup artwork: 20. Four-second native SVG loop; a stationary illustration is used for reduced motion.",
+      "folder": "20-watercolor-koi",
+      "svgBytes": 26448,
+      "svgSha256": "2c4a4e90ab700c9db7f112c30e34fad6b3261076965cc79187111902ba558792"
+    },
+    {
+      "id": "10-portrait-stardust",
+      "selection": "10",
+      "name": "Portrait in Stardust",
+      "background": "#101d38",
+      "cycleMs": 4000,
+      "minimumDisplayMs": 1500,
+      "svg": "loader.svg",
+      "description": "Selected XeLa startup artwork: 10. Four-second native SVG loop; a stationary illustration is used for reduced motion.",
+      "folder": "10-portrait-stardust",
+      "svgBytes": 47927,
+      "svgSha256": "8f53e708f1148bccb2d20532526cab8d3c5f78e10716bf53f98277067c157d64"
+    },
+    {
+      "id": "26-j01-midnight-opal",
+      "selection": "26-J01",
+      "name": "Opal Refraction / Midnight Opal",
+      "background": "#0c1023",
+      "cycleMs": 4000,
+      "minimumDisplayMs": 1500,
+      "svg": "loader.svg",
+      "description": "Selected XeLa startup artwork: 26-J01. Four-second native SVG loop; a stationary illustration is used for reduced motion.",
+      "folder": "26-j01-midnight-opal",
+      "svgBytes": 48940,
+      "svgSha256": "e4c86f492fedb41b5f03dc370357f26f999cfd6107cbe130168995c786cc4759"
+    },
+    {
+      "id": "phoenix-p07-colors-p10-motion",
+      "selection": "P07 colors + P10 motion",
+      "name": "Phoenix / Twin Flame Timefold",
+      "background": "#071b25",
+      "cycleMs": 4000,
+      "minimumDisplayMs": 1500,
+      "svg": "loader.svg",
+      "description": "Selected XeLa startup artwork: P07 colors + P10 motion. Four-second native SVG loop; a stationary illustration is used for reduced motion. The Phoenix combines P07 warm/cool coloring with P10 timefold motion.",
+      "folder": "phoenix-p07-colors-p10-motion",
+      "svgBytes": 57367,
+      "svgSha256": "5f29aaea6e2d9e91156f963808451c1b1150b28996e3d7a8932fb31a82ebc4d9"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "id": "10-portrait-stardust",
+  "selection": "10",
+  "name": "Portrait in Stardust",
+  "background": "#101d38",
+  "cycleMs": 4000,
+  "minimumDisplayMs": 1500,
+  "svg": "loader.svg",
+  "description": "Selected XeLa startup artwork: 10. Four-second native SVG loop; a stationary illustration is used for reduced motion."
+}

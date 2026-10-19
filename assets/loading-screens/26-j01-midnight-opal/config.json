@@ -1,0 +1,10 @@
+{
+  "id": "26-j01-midnight-opal",
+  "selection": "26-J01",
+  "name": "Opal Refraction / Midnight Opal",
+  "background": "#0c1023",
+  "cycleMs": 4000,
+  "minimumDisplayMs": 1500,
+  "svg": "loader.svg",
+  "description": "Selected XeLa startup artwork: 26-J01. Four-second native SVG loop; a stationary illustration is used for reduced motion."
+}

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Support XeLa</title>
+  <desc id="desc">Coffee cup with a heart, drawn in the XeLa style.</desc>
+  <g id="steam" stroke="#C8B2E9" stroke-width="1.65" stroke-linecap="round">
+    <path d="M11.5 7.2c-1.6-1.45.8-2.55.1-4.1"/>
+    <path d="M17.5 7.2c-1.6-1.45.8-2.55.1-4.1"/>
+  </g>
+  <g id="cup" stroke="#E8DFFA" stroke-width="1.45" stroke-linejoin="round">
+    <path d="M5 10.5h17.5v9.2c0 4.55-3.3 7.2-8.75 7.2S5 24.25 5 19.7v-9.2Z" fill="#F8F5FD"/>
+    <path d="M22.5 12h2.1c3.05 0 4.4 1.7 4.4 4.2 0 3.35-2.45 4.9-5.45 4.9h-1.1" stroke="#D7C7EE" stroke-width="2.3" stroke-linecap="round"/>
+    <path d="M4.3 28.5h20.2" stroke="#B99CD6" stroke-width="1.6" stroke-linecap="round"/>
+  </g>
+  <g id="heart">
+    <path d="M14.1 22.7c-.8-.6-4.2-3.1-4.2-5.5 0-1.4 1.05-2.5 2.45-2.5.93 0 1.53.5 1.75 1.14.22-.64.82-1.14 1.75-1.14 1.4 0 2.45 1.1 2.45 2.5 0 2.4-3.4 4.9-4.2 5.5Z" fill="#D36A92"/>
+  </g>
+</svg>

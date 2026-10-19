@@ -1,0 +1,10 @@
+{
+  "id": "33-cabin-snowglobe",
+  "selection": "33",
+  "name": "Cabin Snowglobe",
+  "background": "#290f1b",
+  "cycleMs": 4000,
+  "minimumDisplayMs": 1500,
+  "svg": "loader.svg",
+  "description": "Selected XeLa startup artwork: 33. Four-second native SVG loop; a stationary illustration is used for reduced motion."
+}

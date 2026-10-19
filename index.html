@@ -1,0 +1,913 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      html.booting,html.booting body{background:var(--startup-background,#1c2233);margin:0;overflow:hidden!important}
+      html.booting:not(.boot-revealing) body>:not(#bootScreen){visibility:hidden!important;opacity:0!important;pointer-events:none!important}
+      #bootScreen{display:none}html.booting #bootScreen{display:grid;place-content:center;justify-items:center;position:fixed;inset:0;width:100%;min-height:100vh;min-height:100dvh;z-index:2147483647;background:var(--startup-background,#1c2233);color:#ede4f3;font:12px system-ui;overflow:hidden}
+      html.boot-revealing body{background:var(--bg,#1c2233)}
+    </style>
+    <script>
+      (()=>{
+        const options=[{"id":"44-eye-liquid-gold","background":"#10282b"},{"id":"42-celestial-origami","background":"#290f1b"},{"id":"33-cabin-snowglobe","background":"#290f1b"},{"id":"20-watercolor-koi","background":"#1c1126"},{"id":"10-portrait-stardust","background":"#101d38"},{"id":"26-j01-midnight-opal","background":"#0c1023"},{"id":"phoenix-p07-colors-p10-motion","background":"#071b25"}];
+        // A test can inject only a loader ID, without replacing editor randomness.
+        const selected=options.find(item=>item.id===window.__XELA_TEST_LOADER_ID)||options[Math.floor(Math.random()*options.length)];
+        window.__xelaStartupChoice=Object.freeze({...selected,chosenAt:performance.now()});
+        document.documentElement.style.setProperty('--startup-background',selected.background);
+        document.documentElement.classList.add('booting');
+        const guardedEvents=['keydown','click','pointerdown','drop','dragover'];
+        const guard=event=>{
+          if(!document.documentElement.classList.contains('booting')||event.target.closest?.('#bootScreen button'))return;
+          if(event.type==='keydown'&&event.key==='Tab'&&document.querySelector('#bootScreen button'))return;
+          if(event.type==='keydown'&&((event.ctrlKey||event.metaKey)&&['r','l','t','w','n','q'].includes(event.key.toLowerCase())||event.key==='F5'))return;
+          event.preventDefault();event.stopImmediatePropagation();
+        };
+        guardedEvents.forEach(type=>window.addEventListener(type,guard,true));
+        window.__xelaReleaseStartupGuard=()=>guardedEvents.forEach(type=>window.removeEventListener(type,guard,true));
+        window.__xelaBootError=false;
+        window.__xelaBootWatch=event=>{
+          const source=event.filename||event.target?.src||event.target?.href||'';
+          if(/assets\/loading-screens\/|scripts\/loading-screen-controller\.js|styles\/loading-screen\.css/.test(source))return;
+          if(event.error||event.target?.tagName==='SCRIPT'||(event.target?.tagName==='LINK'&&event.target.rel==='stylesheet')){
+            window.__xelaBootError=true;
+            if(document.getElementById('bootScreen'))window.XeLaLoadingScreen?.fail();
+          }
+        };
+        window.addEventListener('error',window.__xelaBootWatch,true);
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#1c2233" />
+    <title>SVG Motion Studio</title>
+    <link rel="icon" href="assets/branding/favicon.svg?v=3" type="image/svg+xml" />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="styles/sounds.css" />
+    <link rel="stylesheet" href="styles/task-pack.css" />
+    <link rel="stylesheet" href="styles/loading-screen.css" />
+    <script src="assets/loading-screens/44-eye-liquid-gold/loader.js"></script>
+    <script src="assets/loading-screens/42-celestial-origami/loader.js"></script>
+    <script src="assets/loading-screens/33-cabin-snowglobe/loader.js"></script>
+    <script src="assets/loading-screens/20-watercolor-koi/loader.js"></script>
+    <script src="assets/loading-screens/10-portrait-stardust/loader.js"></script>
+    <script src="assets/loading-screens/26-j01-midnight-opal/loader.js"></script>
+    <script src="assets/loading-screens/phoenix-p07-colors-p10-motion/loader.js"></script>
+    <script src="scripts/loading-screen-controller.js"></script>
+  </head>
+  <body aria-busy="true">
+    <div id="bootScreen" role="status" aria-live="polite"><div id="bootArtwork" aria-hidden="true"></div><span id="bootMessage">Opening your studio…</span></div>
+    <script>window.__xelaStartupSurfaceAt=performance.now();window.XeLaLoadingScreen?.start();</script>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="SVG Motion Studio — return to editor layers" title="Back to editor · Layers"
+        ><img
+          class="brand-logo"
+          src="assets/branding/xela-logo.svg"
+          alt="SVG Motion Studio"
+          width="164"
+          height="80"
+      /></a>
+      <div class="header-tools">
+        <button id="importBtn">↥ <span>Import SVG</span></button
+        ><button id="openProjectBtn" title="Open saved project">
+          ▱ <span>Open project</span></button
+        ><span class="separator sound-separator" aria-hidden="true"></span>
+        <button id="soundSettingsBtn" type="button" aria-label="Mute application sounds" aria-pressed="true" title="Sounds on · 20%"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4Z"/><path class="sound-waves" d="M15 9c2 1.5 2 4.5 0 6m3-9c4 3 4 9 0 12"/><path class="sound-mute" d="m16 9 5 6m0-6-5 6"/></svg></button>
+        <span class="separator sound-separator" aria-hidden="true"></span
+        ><button id="undoBtn" class="icon" title="Undo (Ctrl/⌘ Z)"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><g transform="translate(.5 -.5)"><path d="M8 4L3 9L8 14M3 9H14A6 6 0 0 1 14 21"/></g></svg></button
+        ><button id="redoBtn" class="icon" title="Redo (Ctrl/⌘ Shift Z)"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><g transform="translate(-.5 -.5)"><path d="M16 4L21 9L16 14M21 9H10A6 6 0 0 0 10 21"/></g></svg></button>
+      </div>
+      <button id="playBtn" class="play-main">
+        <span class="play-symbol">▶</span><span id="playText">Play</span>
+      </button>
+      <div class="header-right">
+        <a class="support-link" href="https://ko-fi.com/x_e_l_a" target="_blank" rel="noopener noreferrer" aria-label="Support SVG Motion Studio on Ko-fi" title="Support the project on Ko-fi"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+
+  <g id="steam" stroke="#C8B2E9" stroke-width="1.65" stroke-linecap="round">
+    <path d="M11.5 7.2c-1.6-1.45.8-2.55.1-4.1"/>
+    <path d="M17.5 7.2c-1.6-1.45.8-2.55.1-4.1"/>
+  </g>
+  <g id="cup" stroke="#E8DFFA" stroke-width="1.45" stroke-linejoin="round">
+    <path d="M5 10.5h17.5v9.2c0 4.55-3.3 7.2-8.75 7.2S5 24.25 5 19.7v-9.2Z" fill="#F8F5FD"/>
+    <path d="M22.5 12h2.1c3.05 0 4.4 1.7 4.4 4.2 0 3.35-2.45 4.9-5.45 4.9h-1.1" stroke="#D7C7EE" stroke-width="2.3" stroke-linecap="round"/>
+    <path d="M4.3 28.5h20.2" stroke="#B99CD6" stroke-width="1.6" stroke-linecap="round"/>
+  </g>
+  <g id="heart">
+    <path d="M14.1 22.7c-.8-.6-4.2-3.1-4.2-5.5 0-1.4 1.05-2.5 2.45-2.5.93 0 1.53.5 1.75 1.14.22-.64.82-1.14 1.75-1.14 1.4 0 2.45 1.1 2.45 2.5 0 2.4-3.4 4.9-4.2 5.5Z" fill="#D36A92"/>
+  </g>
+</svg>
+<span>Buy me Ko-fi</span></a>
+        <span id="projectName">Purple bloom</span
+        ><button id="saveBtn" title="Save editable project">Save project</button
+        ><button id="exportBtn" class="primary">
+          ↓ Export <span class="desktop-label">SVG</span>
+        </button>
+      </div>
+    </header>
+    <div class="workspace">
+      <nav class="rail" aria-label="Workspace tools">
+        <button data-nav="library"><span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span>Library</button
+        ><button class="active" data-nav="layers"><span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3L22 8L12 13L2 8Z M2 12L12 17L22 12 M2 16L12 21L22 16"/></svg></span>Layers</button
+        ><button data-nav="animate"><span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M2 17C6 17 5 6 9 6S11 19 15 19S18 7 22 7"/></svg></span>Animate</button
+        ><button data-nav="colors"><span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="7" r="1"/><circle cx="7" cy="12" r="1"/><circle cx="16" cy="12" r="1"/><path d="M9 19Q9 12 14 16"/></svg></span>Colors</button
+        ><button data-nav="canvas"><span><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 3V21M3 8H21"/></svg></span>Canvas</button
+        ><button id="helpBtn" class="rail-help"><span>?</span>Help</button>
+      </nav>
+      <aside id="layersSidebar" class="sidebar">
+        <section id="librarySection" hidden>
+          <div class="section-title">
+            <h2>SVG Library</h2>
+            <button id="expandLibrary" class="icon" title="Expand library"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 9V3H9M15 3H21V9M21 15V21H15M9 21H3V15"/></svg></button>
+          </div>
+          <div class="searchbox">
+            <span>⌕</span
+            ><input
+              id="librarySearch"
+              placeholder="Search shapes…"
+              aria-label="Search built-in SVGs"
+            />
+          </div>
+          <div id="categories" class="chips"></div>
+          <div id="libraryGrid" class="library-grid"></div>
+          <button id="browseLibrary" class="wide quiet">
+            ▦ Browse all SVGs <span id="libraryCount"></span>
+          </button>
+        </section>
+        <section id="layersSection">
+          <div class="section-title">
+            <h2>Layers</h2>
+            <div>
+              <button
+                id="closeLayersBtn"
+                class="icon"
+                title="Hide layers"
+                aria-label="Hide layers"
+              ><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"/></svg></button
+              ><button
+                id="selectAllBtn"
+                class="icon"
+                title="Select all top-level objects"
+              ><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/><rect x="7" y="7" width="10" height="10" rx="1"/><path d="m9 12 2 2 4-4"/></svg></button
+              ><button id="addShapeBtn" class="icon" title="Add a shape"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5v14M5 12h14"/></svg></button>
+            </div>
+          </div>
+          <p class="muted small">
+            Layers are the parts of your SVG. Select a part to edit it, expand
+            groups, or toggle its visibility. Shift-click to select several.
+          </p>
+          <div id="layersList"></div>
+          <div class="layer-actions">
+            <button id="groupBtn" title="Group selected objects">Group</button
+            ><button id="duplicateBtn" title="Duplicate selected objects">
+              Duplicate</button
+            ><button id="deleteBtn" title="Delete selected objects">
+              Delete
+            </button>
+          </div>
+        </section>
+        <div class="sidebar-foot">
+          <span class="status-dot"></span> Local editor · no account needed
+        </div>
+      </aside>
+      <main class="stage-column">
+        <div class="stage-top">
+          <span id="selectionLabel">Purple bloom</span>
+          <div class="stage-actions">
+            <button
+              id="canvasBrowseBtn"
+              aria-haspopup="dialog"
+              aria-controls="libraryDialog"
+            >
+              ＋ Browse SVGs</button
+            ><span class="muted">Click to select · drag to move</span>
+          </div>
+        </div>
+        <div
+          id="stage"
+          class="stage"
+          tabindex="0"
+          aria-label="SVG editing canvas"
+        >
+          <div id="canvasFrame">
+            <div id="svgHost"></div>
+            <svg id="overlay" aria-hidden="true"></svg>
+            <div class="guide horizontal"></div>
+            <div class="guide vertical"></div>
+            <div class="safe-frame"></div>
+          </div>
+          <div id="dropHint">Drop an SVG to start editing</div>
+        </div>
+        <div class="canvas-toolbar">
+          <span id="dimensionsLabel">600 × 600</span>
+          <div>
+            <button id="zoomOut" class="icon" title="Zoom out">−</button
+            ><span id="zoomLabel">100%</span
+            ><button id="zoomIn" class="icon" title="Zoom in">+</button
+            ><button id="fitBtn" title="Fit entire canvas to available space"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 9V3H9M15 3H21V9M21 15V21H15M9 21H3V15"/></svg> Fit</button
+            ><button id="cropBtn" title="Drag a crop frame"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 2V17H22M2 7H17V22"/></svg> Crop</button>
+          </div>
+        </div>
+        <section class="timeline-panel">
+          <div class="timeline-header">
+            <div>
+              <button id="timelinePlay" class="icon" title="Play / pause">
+                ▶</button
+              ><button id="rewindBtn" class="icon" title="Return to start">
+                ↤</button
+              ><span id="timeLabel">0.00 / 3.00s</span>
+            </div>
+            <div>
+              <label class="small muted"
+                ><input type="checkbox" id="previewLoop" checked /> Loop
+                preview</label
+              ><button id="addAnimationBtn">+ Add animation</button>
+            </div>
+          </div>
+          <div id="timelineScroll">
+            <div class="ruler-row">
+              <span class="track-label">Timeline</span>
+              <div id="ruler"></div>
+            </div>
+            <div id="timelineTracks"></div>
+          </div>
+          <input
+            id="scrubber"
+            type="range"
+            min="0"
+            max="3"
+            step="0.01"
+            value="0"
+            aria-label="Scrub animation timeline"
+          />
+        </section>
+      </main>
+      <aside class="inspector">
+        <div class="inspector-tabs" role="tablist">
+          <button class="active" data-tab="animate" role="tab">Animate</button
+          ><button data-tab="colors" role="tab">Colors</button
+          ><button data-tab="canvas" role="tab">Canvas</button>
+        </div>
+        <div id="inspectorBody">
+          <section id="animatePanel" class="panel">
+            <div class="selection-heading">
+              <h2 id="objectName">Petal 01</h2>
+              <button id="renameBtn" class="icon" title="Rename selection">
+                ✎
+              </button>
+            </div>
+            <p class="muted small" id="objectInfo">Individual object</p>
+            <h3>Suggested effects</h3>
+            <div id="suggestions" class="suggestions"></div>
+            <p id="suggestionReason" class="muted small"></p>
+            <label class="field"
+              >Animation<select id="effectSelect"></select></label
+            ><label id="revealDirectionField" class="field" hidden
+              >Reveal direction<select id="revealDirection"></select
+            ></label>
+            <div class="two-col">
+              <label class="field"
+                >Duration <span class="unit">s</span
+                ><input
+                  id="duration"
+                  type="number"
+                  min="0.1"
+                  max="120"
+                  step="0.1"
+                  value="1.8" /></label
+              ><label class="field"
+                >Delay <span class="unit">s</span
+                ><input
+                  id="delay"
+                  type="number"
+                  min="0"
+                  max="120"
+                  step="0.1"
+                  value="0"
+              /></label>
+            </div>
+            <label class="field"
+              >Easing<select id="easing">
+                <option value="ease-out">Ease out</option>
+                <option value="ease-in-out">Ease in/out</option>
+                <option value="ease-in">Ease in</option>
+                <option value="linear">Linear</option>
+                <option value="elastic">Elastic / overshoot</option>
+                <option value="custom">Custom curve</option>
+              </select></label
+            ><svg
+              id="curve"
+              viewBox="0 0 240 100"
+              aria-label="Drag the two easing handles"
+            >
+              <path
+                class="curve-grid"
+                d="M20 15H220M20 50H220M20 85H220M20 15V85M120 15V85M220 15V85"
+              />
+              <path id="curveLines" />
+              <path id="curvePath" />
+              <circle id="handle1" r="5" />
+              <circle id="handle2" r="5" />
+            </svg>
+            <p id="curveValue" class="muted small curve-value">
+              cubic-bezier(0.25, 0.1, 0.25, 1)
+            </p>
+            <div class="motion-toggles">
+              <label
+                >Loop <input id="loop" type="checkbox" class="switch" /></label
+              ><label
+                >Reverse <input id="reverse" type="checkbox" class="switch"
+              /></label>
+            <div id="revealFromEndField" hidden>
+              <label class="end-toggle">Reveal from end
+                <input id="revealFromEnd" type="checkbox" class="switch" aria-describedby="revealFromEndHint" /></label
+              >
+              <p id="revealFromEndHint" class="muted small">
+                Start at the opposite end and reveal toward the start.
+              </p>
+            </div>
+            </div>
+            <div class="two-col">
+              <label class="field"
+                >Repeat count<input
+                  id="repeat"
+                  type="number"
+                  min="1"
+                  max="100"
+                  value="1" /></label
+              ><label class="field"
+                >Alternate<input id="alternate" type="checkbox"
+              /></label>
+            </div>
+            <div class="clip-buttons">
+              <button id="removeClip">Remove effect</button
+              ><button id="staggerBtn">Stagger selection</button>
+            </div>
+            <details id="curvedRevealSection" open>
+              <summary>Curved reveal route</summary>
+              <p class="muted small">
+                Stroked curves use their actual geometry. For a filled band,
+                draw a route through its center.
+              </p>
+              <div class="two-col">
+                <button id="autoCurveRoute">Use shape curve</button
+                ><button id="drawCurveRoute">Draw route</button>
+              </div>
+              <label class="field"
+                >Reveal brush width · SVG units<input
+                  id="curveBrushWidth"
+                  type="number"
+                  min="0.5"
+                  max="2000"
+                  step="1"
+                  value="24" /></label
+              ><label class="check"
+                ><input id="showCurveRoute" type="checkbox" checked /> Show
+                route & editable points</label
+              >
+              <p id="curveRouteInfo" class="muted small">
+                Choose Curved reveal to enable.
+              </p>
+            </details>
+            <details id="curveTimingSection">
+              <summary>Coordinate curve timings</summary>
+              <p class="muted small">
+                Select multiple objects, or select their parent group.
+              </p>
+              <div class="two-col">
+                <button id="matchCurveTiming">Same start & finish</button
+                ><button id="sequenceCurveTiming">Draw in sequence</button>
+              </div>
+              <label class="field"
+                >Drawing speed · SVG units / second<input
+                  id="curveSpeed"
+                  type="number"
+                  min="1"
+                  max="10000"
+                  value="120" /></label
+              ><button id="speedCurveTiming" class="wide">
+                Match speed to path length
+              </button>
+              <p class="muted small">
+                Constant-speed mode uses linear easing. Longer curves take more
+                time.
+              </p>
+            </details>
+            <details>
+              <summary>Morph a path</summary>
+              <p class="muted small">
+                Select a path, then paste its target path data. The command
+                types and point count must match.
+              </p>
+              <textarea
+                id="morphTarget"
+                placeholder="M … C … Z"
+                rows="3"
+              ></textarea>
+              <div class="two-col">
+                <button id="morphApply">Apply morph</button
+                ><button id="morphClear">Clear</button>
+              </div>
+              <p id="morphStatus" class="small muted"></p>
+            </details>
+            <details open>
+              <summary>Size & position</summary>
+              <div class="two-col">
+                <label class="field"
+                  >X<input id="posX" type="number" step="1" value="0" /></label
+                ><label class="field"
+                  >Y<input id="posY" type="number" step="1" value="0" /></label
+                ><label class="field"
+                  >Width · SVG units<input
+                    id="objectWidth"
+                    type="number"
+                    min="0.1"
+                    step="1"
+                    value="100" /></label
+                ><label class="field"
+                  >Height · SVG units<input
+                    id="objectHeight"
+                    type="number"
+                    min="0.1"
+                    step="1"
+                    value="100" /></label
+                ><label class="field"
+                  >Scale X %<input
+                    id="scaleX"
+                    type="number"
+                    min="1"
+                    max="2000"
+                    value="100" /></label
+                ><label class="field"
+                  >Scale Y %<input
+                    id="scaleY"
+                    type="number"
+                    min="1"
+                    max="2000"
+                    value="100" /></label
+                ><label class="field"
+                  >Rotation °<input
+                    id="rotation"
+                    type="number"
+                    value="0" /></label
+                ><label class="field"
+                  >Opacity %<input
+                    id="opacity"
+                    type="number"
+                    min="0"
+                    max="100"
+                    value="100"
+                /></label>
+              </div>
+              <div class="two-col">
+                <button id="centerBtn">Center selection</button
+                ><button id="resetTransform">Reset transform</button>
+              </div>
+            </details>
+          </section>
+          <section id="colorsPanel" class="panel" hidden>
+            <h2>Object colors</h2>
+            <p class="muted small">Changes apply to the selected objects.</p>
+            <label class="field"
+              >Fill
+              <div class="color-input">
+                <input id="fillColor" type="color" value="#b986f4" /><input
+                  id="fillHex"
+                  value="#b986f4"
+                  aria-label="Fill hex color"
+                /></div></label
+            ><button id="fillNone" class="wide quiet">No fill</button
+            ><label class="field"
+              >Stroke
+              <div class="color-input">
+                <input id="strokeColor" type="color" value="#42d9d0" /><input
+                  id="strokeHex"
+                  value="#42d9d0"
+                  aria-label="Stroke hex color"
+                /></div
+            ></label>
+            <div class="two-col">
+              <label class="field"
+                >Stroke width<input
+                  id="strokeWidth"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.5"
+                  value="1" /></label
+              ><button id="strokeNone">No stroke</button>
+            </div>
+            <h3>Palette</h3>
+            <div id="palette" class="palette"></div>
+            <div class="two-col">
+              <button id="extractPalette">Extract colors</button
+              ><button id="shufflePalette">New palette</button>
+            </div>
+            <h3>Gradient editor</h3>
+            <p class="muted small">
+              Shared gradient changes affect every shape that uses it.
+            </p>
+            <select id="gradientSelect" aria-label="Select gradient"></select>
+            <div id="gradientStops"></div>
+            <button id="addGradient" class="wide quiet">
+              + Apply two-color gradient
+            </button>
+          </section>
+          <section id="canvasPanel" class="panel" hidden>
+            <h2>Canvas & export size</h2>
+            <div class="two-col">
+              <label class="field"
+                >Width px<input
+                  id="canvasWidth"
+                  type="number"
+                  min="1"
+                  max="16000"
+                  value="600" /></label
+              ><label class="field"
+                >Height px<input
+                  id="canvasHeight"
+                  type="number"
+                  min="1"
+                  max="16000"
+                  value="600"
+              /></label>
+            </div>
+            <label class="check"
+              ><input id="aspectLock" type="checkbox" checked /> Lock aspect
+              ratio</label
+            >
+            <details class="custom-aspect">
+              <summary>Custom aspect ratio</summary>
+              <div class="two-col">
+                <label class="field">Ratio width<input id="aspectRatioWidth" type="number" min="0.001" max="16000" step="any" value="16" /></label>
+                <label class="field">Ratio height<input id="aspectRatioHeight" type="number" min="0.001" max="16000" step="any" value="9" /></label>
+              </div>
+              <div class="two-col">
+                <button id="applyAspectRatio" type="button">Apply ratio</button>
+                <button id="clearAspectRatio" type="button" disabled>Use current size</button>
+              </div>
+              <p id="aspectRatioStatus" class="muted small" aria-live="polite">Lock uses the current canvas proportions.</p>
+              <p class="muted small">Apply keeps the width where possible and enables the lock. This changes export size, not artwork or crop.</p>
+            </details>
+            <label class="field"
+              >Preview background
+              <div class="color-input">
+                <input
+                  id="backgroundColor"
+                  type="color"
+                  value="#202638"
+                /><input
+                  id="backgroundHex"
+                  value="#202638"
+                  aria-label="Preview background hex"
+                /></div></label
+            ><label class="check"
+              ><input id="exportBackground" type="checkbox" /> Include
+              background in exports</label
+            >
+            <div class="canvas-toggles">
+              <label
+                >Transparency grid<input
+                  id="gridToggle"
+                  type="checkbox"
+                  class="switch" /></label
+              ><label
+                >Alignment guides<input
+                  id="guidesToggle"
+                  type="checkbox"
+                  class="switch" /></label
+              ><label
+                >Safe area<input
+                  id="safeToggle"
+                  type="checkbox"
+                  class="switch" /></label
+              ><label
+                >Selection outlines<input
+                  id="outlineToggle"
+                  type="checkbox"
+                  class="switch"
+                  checked /></label
+              ><label
+                >Editable path nodes<input
+                  id="nodesToggle"
+                  type="checkbox"
+                  class="switch"
+              /></label>
+            </div>
+            <button id="fitCanvas" class="wide">⛶ Fit to view</button>
+            <details open>
+              <summary>Crop & viewBox</summary>
+              <p class="muted small">
+                Crop changes the visible SVG bounds. It preserves the vector
+                artwork.
+              </p>
+              <div class="two-col">
+                <label class="field"
+                  >Left<input id="viewX" type="number" value="0" /></label
+                ><label class="field"
+                  >Top<input id="viewY" type="number" value="0" /></label
+                ><label class="field"
+                  >Width<input
+                    id="viewW"
+                    type="number"
+                    min="1"
+                    value="600" /></label
+                ><label class="field"
+                  >Height<input id="viewH" type="number" min="1" value="600"
+                /></label>
+              </div>
+              <div class="two-col">
+                <button id="drawCrop">Draw crop</button
+                ><button id="trimBtn">Trim empty space</button
+                ><button id="resetCrop">Reset crop</button
+                ><button id="applyView">Apply bounds</button>
+              </div>
+            </details>
+            <h3>Whole artwork scale</h3>
+            <label class="field"
+              >Scale %<input
+                id="artScale"
+                type="number"
+                min="1"
+                max="1000"
+                value="100"
+            /></label>
+            <p class="muted small">
+              Artwork scale changes the drawing; canvas dimensions change the
+              exported SVG size.
+            </p>
+          </section>
+        </div>
+      </aside>
+    </div>
+    <footer class="statusbar">
+      <span id="status">Ready · choose a layer to animate</span
+      ><span>Space: play · ⌘/Ctrl Z: undo · Delete: remove</span>
+    </footer>
+    <input
+      type="file"
+      id="fileInput"
+      accept=".svg,image/svg+xml"
+      hidden
+    /><input type="file" id="projectInput" accept=".json,.svgmotion" hidden />
+    <dialog id="libraryDialog" class="library-dialog">
+      <div class="dialog-head">
+        <div>
+          <span class="eyebrow">YOUR CREATIVE STARTING POINT</span>
+          <h2>Find your next SVG</h2>
+          <p class="muted">
+            Built-in illustrations work offline. Search online for thousands
+            more.
+          </p>
+        </div>
+        <div>
+          <button id="libraryFullscreen" title="Toggle full-screen gallery">
+            ⛶ Full screen</button
+          ><button
+            data-close="libraryDialog"
+            class="icon"
+            aria-label="Close gallery"
+          >
+            ×
+          </button>
+        </div>
+      </div>
+      <div class="gallery-controls">
+        <div class="searchbox">
+          <span>⌕</span
+          ><input
+            id="gallerySearch"
+            placeholder="Search flowers, icons, shapes…"
+            aria-label="Search expanded SVG gallery"
+          />
+        </div>
+        <div id="gallerySourcePicker" class="source-picker">
+          <input id="gallerySource" type="hidden" value="builtin" /><button
+            id="gallerySourceButton"
+            type="button"
+            aria-haspopup="menu"
+            aria-expanded="false"
+            aria-controls="gallerySourceMenu"
+            aria-label="SVG source"
+          >
+            <span id="gallerySourceLabel">Built-in collection</span
+            ><svg viewBox="0 0 16 16" aria-hidden="true">
+              <path d="m3 6 5 5 5-5" />
+            </svg>
+          </button>
+          <div
+            id="gallerySourceMenu"
+            class="source-menu"
+            role="menu"
+            aria-label="SVG source"
+            hidden
+          >
+            <button
+              type="button"
+              role="menuitemradio"
+              aria-checked="true"
+              data-gallery-source="builtin"
+            >
+              Built-in collection</button
+            ><button
+              type="button"
+              role="menuitemradio"
+              aria-checked="false"
+              data-gallery-source="online"
+            >
+              Online · Iconify
+            </button>
+          </div>
+        </div>
+        <button id="onlineSearch" class="primary">Search</button>
+      </div>
+      <div id="galleryCategories" class="chips"></div>
+      <div class="gallery-options">
+        <label
+          ><input type="radio" name="galleryMode" value="replace" checked />
+          Open as new artwork</label
+        ><label
+          ><input type="radio" name="galleryMode" value="add" /> Add to current
+          canvas</label
+        ><span id="galleryStatus" class="muted small"></span>
+      </div>
+      <div id="galleryGrid" class="gallery-grid"></div>
+      <div class="dialog-foot">
+        <span
+          >Click a thumbnail to load it. Your edits are available with
+          Undo.</span
+        >
+        <nav
+          id="onlinePagination"
+          class="online-pagination"
+          aria-label="Online icon pages"
+          hidden
+        >
+          <button id="previousOnline" disabled>← Previous</button
+          ><span id="onlinePageLabel" aria-live="polite">Page 1</span
+          ><button id="moreOnline" disabled>Next →</button>
+        </nav>
+      </div>
+    </dialog>
+    <dialog id="exportDialog">
+      <div class="dialog-head">
+        <div>
+          <span class="eyebrow">READY TO SHARE</span>
+          <h2>Export your creation</h2>
+        </div>
+        <button
+          data-close="exportDialog"
+          class="icon"
+          aria-label="Close export"
+        >
+          ×
+        </button>
+      </div>
+      <label class="field"
+        >Filename<input id="exportName" value="purple-bloom"
+      /></label>
+      <div class="export-grid">
+        <button data-export="animated">
+          <span>◈</span><b>Animated SVG</b
+          ><small>Standalone file · CSS + native SVG animation</small></button
+        ><button data-export="static">
+          <span>◇</span><b>Static SVG</b
+          ><small>Editable vectors · no animations</small></button
+        ><button data-export="css">
+          <span>{ }</span><b>Animation CSS</b
+          ><small>Pairs with the prepared SVG below</small></button
+        ><button data-export="prepared">
+          <span>⌁</span><b>SVG for external CSS</b
+          ><small>Includes matching animation classes</small></button
+        ><button data-export="html">
+          <span>〈/〉</span><b>HTML example</b
+          ><small>Complete inline SVG demo</small></button
+        ><button data-export="project">
+          <span>▱</span><b>Editable project</b
+          ><small>Reopen every layer and setting</small>
+        </button>
+      </div>
+      <details>
+        <summary>Export another size</summary>
+        <div class="two-col">
+          <label class="field"
+            >Width px<input
+              id="variantW"
+              type="number"
+              min="1"
+              max="16000"
+              value="300" /></label
+          ><label class="field"
+            >Height px<input
+              id="variantH"
+              type="number"
+              min="1"
+              max="16000"
+              value="300"
+          /></label>
+        </div>
+        <button id="variantExport" class="wide">
+          Download animated size variant
+        </button>
+      </details>
+      <p id="exportNote" class="muted small">
+        Use animated SVG with &lt;img&gt; or inline SVG. For external CSS, embed
+        the prepared SVG inline in HTML. Morph data is exported inside the SVG.
+      </p>
+    </dialog>
+    <dialog id="textDialog">
+      <div class="dialog-head">
+        <h2 id="textDialogTitle">Edit</h2>
+        <button data-close="textDialog" class="icon">×</button>
+      </div>
+      <input id="textDialogInput" aria-label="Enter value" /><button
+        id="textDialogApply"
+        class="primary wide"
+      >
+        Apply
+      </button>
+    </dialog>
+    <dialog id="helpDialog">
+      <div class="dialog-head">
+        <h2>A little help</h2>
+        <button data-close="helpDialog" class="icon">×</button>
+      </div>
+      <div class="help-copy">
+        <p>
+          <b>1. Pick your artwork.</b> Import or drop an SVG, or expand the
+          library. The original purple bloom has separate petals and stamens.
+        </p>
+        <p>
+          <b>2. Select a part.</b> Click the drawing or a layer. Expand groups
+          to reach their children. Shift-click for multiple selection. Drag
+          selected objects to move them.
+        </p>
+        <p>
+          <b>3. Animate.</b> Choose a suggestion or effect. Add more clips, drag
+          timeline bars to move them, and drag their right edge to resize. Scrub
+          to preview exact moments. Click a timeline clip, then press Delete or
+          Backspace (or Remove clip) to remove only that animation. The artwork stays.
+        </p>
+        <p>
+          <b>4. Style.</b> Change fills, strokes, gradients, opacity, scale and
+          rotation. Canvas controls handle dimensions and crop bounds.
+        </p>
+        <p>
+          <b>5. Export.</b> Download animated SVG, static SVG, a CSS/ SVG pair,
+          a working HTML example or an editable project.
+        </p>
+        <p>
+          <b>Arrange the workspace.</b> Layers toggles the left panel. Clicking
+          an already-active Animate, Colors, or Canvas tool closes the right
+          inspector; click again to reopen it. Drag the divider above the
+          timeline up or down to adjust its height. You can also focus the
+          divider and use the arrow keys.
+        </p>
+        <p><b>Sounds & support.</b> The header speaker silently toggles the two approved recordings at 20% volume; your preference is saved. No sound plays on page load. The coffee-cup link opens optional project support on Ko-fi in a new tab.</p>
+        <p><b>Studio Artwork.</b> Find all 81 new vector artworks with descriptive category names; hover to see the original collection names. Individual paths stay editable. Shift-click Group (or Ctrl/Command Shift G) to ungroup; first remove any animation applied to the parent group.</p>
+        <p><b>Selection toggles.</b> Click Select all again to deselect everything, or click the stage margin outside the canvas frame. Clicking an active suggested animation removes that effect only; artwork and other clips remain.</p>
+        <p>
+          <b>Browse artwork.</b> The expanded library keeps the left tool rail
+          accessible. Choose Online · Iconify to browse automatically. Typing
+          updates partial-name matches; Search or Enter runs immediately.
+          Previous/Next pages adapt to the available space and skip broken icons.
+        </p>
+        <p>
+          <b>Curved reveals.</b> Choose Curved reveal for stroked curves, or
+          draw a custom route through a filled band. Adjust brush width and drag
+          route points. Coordinate curve timings can match the start/finish,
+          sequence the curves or calculate durations from their lengths. Reveal
+          direction also supports edges, corners and center-out options.
+          Reveal from end starts at the opposite endpoint; Reverse plays the
+          animation backward.
+        </p>
+        <p>
+          <b>Morph & nodes.</b> Morph supports matching path command structures.
+          Nodes can be edited for M/L/C/Q/S/T/H/V commands. Arc paths remain
+          selectable but are not node-editable.
+        </p>
+        <p>
+          <b>Local files.</b> Open index.html directly. Online icons need
+          internet access. Save a project to keep a portable copy; browser
+          autosave is best-effort. If a “Not saved” warning appears, download your
+          project before closing the editor. Invalid project files leave your
+          current canvas unchanged.
+        </p>
+      </div>
+    </dialog>
+    <div id="toast" role="status"></div>
+    <script src="scripts/library.js"></script>
+    <script src="scripts/custom-library.js"></script>
+    <script src="scripts/xela-library-manifest.js"></script>
+    <script src="scripts/xela-library.js"></script>
+    <script src="scripts/suggestions.js"></script>
+    <script src="scripts/project-safety.js"></script>
+    <script src="scripts/sound-engine.js"></script>
+    <script src="scripts/imported-css.js"></script>
+    <script src="scripts/app.js"></script>
+    <script src="scripts/online-gallery.js"></script>
+    <script src="scripts/workspace.js"></script>
+    <script src="scripts/clipboard-import.js"></script>
+    <script src="scripts/group-controls.js"></script>
+    <script src="scripts/sound-settings.js"></script>
+    <script src="scripts/startup.js"></script>
+  </body>
+</html>
